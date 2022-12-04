@@ -1,5 +1,8 @@
+from datetime import date
 import platform
 import os
+import psycopg2
+import psycopg2.extras
 
 
 def retorna_os():
@@ -13,9 +16,9 @@ def limpa_tela():
         os.system("clear")
 
 
-def converte_data_sql(data: str):
-    # 19/09/2022
-    retorno = data[6:10] + "-" + data[3:5] + "-" + data[0:2]
+def converte_data_sql(data: date):
+    retorno = data.strftime("%Y-%m-%d")
+    retorno = retorno[0:4] + "-" + retorno[8:10] + "-" + retorno[5:7]
 
     return retorno
 
