@@ -1,9 +1,11 @@
 from datetime import date
 import platform
 import os
+from time import sleep
 import psycopg2
 import psycopg2.extras
 
+ls = "-" * 60
 
 def retorna_os():
     return platform.system().upper()
@@ -17,8 +19,10 @@ def limpa_tela():
 
 
 def converte_data_sql(data: date):
-    retorno = data.strftime("%Y-%m-%d")
-    retorno = retorno[0:4] + "-" + retorno[8:10] + "-" + retorno[5:7]
+    retorno = None
+    if data:
+        retorno = data.strftime("%Y-%m-%d")
+        retorno = retorno[0:4] + "-" + retorno[8:10] + "-" + retorno[5:7]
 
     return retorno
 
@@ -56,3 +60,9 @@ def retorna_plano_conta(texto: str):
 
 def converte_float(*args):
     return args[0].replace(",", ".")
+
+def mensagem(texto: str, tempo: int):
+    print(ls)
+    print(texto)
+    print(ls)
+    sleep(tempo)

@@ -14,13 +14,14 @@ complemento = ""
 valor = ""
 codigo_forma_pagamento = ""  # 1=Dinheiro   2=Nubank   3=Inter   4=Bradesco
 
-# Forma de utilizar:
-# --------------------------------------------
-# três de dezembro de dois mil e vinte dois
-# alimentação
-# frutas
-# vinte e doi vírgula cinquenta e três
-# dois
+print("Forma de utilizar:")
+print(ls)
+print("Data: três de dezembro de dois mil e vinte dois")
+print("Plano de conta: alimentação")
+print("Complemento: frutas")
+print("Valor: vinte e dois vírgula cinquenta e três")
+print("Código da forma de pagamento: dois")
+print(ls)
 
 while True:
     data = inp.inputDate(prompt="Data: ", blank=True, applyFunc=fn.converte_float)
@@ -31,9 +32,7 @@ while True:
 
     if data == "" and plano_conta == "" and complemento == "" and \
             valor == "" and codigo_forma_pagamento == "":
-        print(ls)
-        print("Fim do aplicativo.")
-        print(ls)
+        fn.mensagem("Fim do aplicativo.", 0)
         break
     else:
         print(ls)
@@ -46,6 +45,11 @@ while True:
 
         print(ls)
 
+        if data == "" or plano_conta == "" or complemento == "" or \
+            valor == "" or codigo_forma_pagamento == "":
+            fn.mensagem("Dados inválidos.", 3)
+            continue
+
         conexao = psycopg2.connect(host="127.0.0.1", port="5436", database="simplesvarejo", user="postgres", password="Mpvpr@8@8282@1@RCPNMGPOVP")
         cursor = conexao.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         sql01 = ""
@@ -57,13 +61,10 @@ while True:
         sql01 = "SELECT codigo FROM plano_conta_tesouraria WHERE upper(to_ascii(descricao)) LIKE upper(to_ascii('" + plano_conta + "%')) ORDER BY descricao LIMIT 1;"
         cursor.execute(sql01)
         consulta01 = cursor.fetchone()
-        codigo_plano_conta = consulta01["codigo"]
-        if not codigo_plano_conta:
-            print(ls)
-            print("Fim do aplicativo.")
-            print(ls)
-            sleep(3)
+        if not consulta01:
+            fn.mensagem("Plano de conta não encontrado. Tente novamente.", 5)
             continue
+        codigo_plano_conta = consulta01["codigo"]
 
         sql01 = """
             INSERT INTO
